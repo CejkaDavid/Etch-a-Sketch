@@ -1,0 +1,163 @@
+<html>
+    <head>
+        <link rel='stylesheet' type='text/css' href='styles.css'>
+    </head>
+    <body>
+        <div class="nadpis"><h1>Etch a Sketch</h1></div>
+        
+        <div class="pole" id="main">
+
+        <script>
+            //vytvoření políček na malování
+            var pole = document.getElementsByClassName("pole");
+              
+            //proměnná vyrání všech divů policko
+            var polickoDiv = document.getElementsByClassName("policko");  
+            console.log(polickoDiv);
+
+            var mouseDown = 0;
+
+            var i;
+            var div;
+            var size;   //velikost stran čtverce
+            var sizeBrush;
+            var isRandom = false;
+
+            var x, y, z;
+            
+            //funke vytvoření čtverce políček
+            function createSquare(size = 32){
+                if(div == null){
+                    //console.log(div);
+                }else{
+                    //console.log("elseee");
+                    while (polickoDiv.length > 0){ 
+                        polickoDiv[0].remove();
+                        //console.log("aa");
+                    }
+                    
+                }
+               
+                // console.log(size);
+
+                //for cyklus na vytvoření čverce políček 
+                for (i = 0; i < size*size; i++) {
+                    div = document.createElement("div");
+                    div.className = "policko";
+                    //div.style.backgroundColor = "red";
+                    div.style.color = "white";
+                    //div.innerHTML = "Hello";
+                    document.getElementById("main").appendChild(div); 
+                    document.getElementById("main").style.gridTemplateColumns = "repeat(" + size + ", 1fr)";
+                    document.getElementById("main").style.gridTemplateRows = "repeat(" + size + ", 1fr)";
+                    document.getElementById("main").style.display = "grid";
+
+                    //přidání EventListeneru na "kreslení"
+                    polickoDiv[i].addEventListener("mouseover", function( event ) { 
+                            
+                            //je políčko nevybarvené?
+                            if (event.target.style.backgroundColor == ""){
+                                //console.log("políčko nebylo vybarvené");
+                                
+                                //jestli je barva "kreslení" random nebo defaultní oranžová
+                                if (isRandom){
+                                    x = Math.floor(Math.random() * 256);
+                                    y = Math.floor(Math.random() * 256);    
+                                    z = Math.floor(Math.random() * 256);
+                                    var bgColor = "rgb(" + x + "," + y + "," + z + ")";
+                                }  else {
+                                    x = 255;
+                                    y = 140;
+                                    z = 0;
+                                    var bgColor = "rgb(" + x + "," + y + "," + z + ")";
+                                    //console.log(bgColor);
+                                }
+
+                            } else {
+                                var thisRgb = event.target.style.backgroundColor;
+                                //console.log("thisRgb: " + thisRgb);
+
+                                var second = thisRgb.lastIndexOf(",");  //heldání znaku ,
+                                var first = thisRgb.indexOf(",")        //heldání 2. znaku ,
+                                var zavorka = thisRgb.indexOf(")")      //hledání znaku )
+
+                                //vybrání x, y, z  z thisRgb
+                                var thisX= thisRgb.slice(4, first);
+                                var thisY= thisRgb.slice(first+1, second);
+                                var thisZ= thisRgb.slice(second+1, zavorka);
+                                //console.log("thisZ: " + thisZ);
+
+                                //opatření aby to nešlo nekonečně do mínusu, sice to může zajít trochu do - , ale na barvu to nemá vliv
+                                if (thisX > 0){
+                                    thisX -= 25.5;
+                                }
+                                if (thisY > 0){
+                                    thisY -= 25.5;
+                                }
+                                if (thisZ > 0){
+                                    thisZ -= 25.5;
+                                }
+                                bgColor = "rgb(" + thisX + "," + thisY + "," + thisZ + ")";
+                                //console.log("bgColor: " + bgColor);
+                            }
+                            
+                            document.body.onmousedown = function() { 
+                            mouseDown = true;
+                            }
+                            document.body.onmouseup = function() {
+                            mouseDown = false;
+                            }
+
+                            if(mouseDown){
+                                event.target.style.backgroundColor = bgColor;
+                            }
+
+                            // resetuje barvu nazpět po intervalu
+                            /*setTimeout(function() {
+                                event.target.style.backgroundColor = "";
+                            }, 5000);*/
+
+                    }, false);  
+                }
+
+            }
+
+            createSquare();
+           
+            function Random(){
+               if (isRandom){
+                   isRandom = false;
+               } else {
+                   isRandom = true;
+               }
+               //console.log("isRndom: " + isRandom);
+            }
+
+            function askSize(){
+                sizeBrush = prompt("Brush size (min. 4, max. 31.25)", "15.625");
+                if (sizeBrush != null) {
+                    //console.log(sizeBrush);
+                    if(sizeBrush < 4){
+                        sizeBrush = 4;
+                    } else if(sizeBrush > 31.25) {
+                        sizeBrush = 31.25;
+                        console.log("větší než 31.25.." + sizeBrush)
+                    }
+                    
+                    size = 500 / sizeBrush; 
+                    createSquare(size);
+                }
+            }
+
+        </script>
+        
+        </div>
+
+        <div>
+        <button onclick = "askSize()" type="button" id="clear">Clear & Brush Size</button>
+        <button onclick = "Random()" type="button">Random Color</button>
+        </div>
+        
+    </body>
+
+</html>

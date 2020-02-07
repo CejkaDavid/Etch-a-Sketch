@@ -1,0 +1,45 @@
+html{
+    background-image: linear-gradient(red, yellow);
+}
+
+body{
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    
+    /*zákaz označování.. které bugovalo malování*/
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+h1{
+  margin: 10px;  
+  font-family: Brush Script MT;
+  font-style: italic;
+  font-size: 70px;
+}
+
+.pole{
+    /*grid-template-columns: repeat(16, 1fr);*/
+    display: grid;
+    margin: 10px;
+    background-color: white;
+    border: 3px solid black
+}
+
+#main {
+    height: 500px;
+    width: 500px;
+}
+
+.policko{
+    
+}
+
+button{
+    margin:5px;
+}
